@@ -2,6 +2,7 @@ import math
 from flask import Flask, render_template, request
 import forms
 #from flask_wtf.csrf import CSRFProtect
+from forms import CinepolisForm, PizzaForm
 
 
 app= Flask(__name__)
@@ -118,6 +119,70 @@ def alumnos():
         email =alumno_clas.correo.data
     return render_template("alumnos.html",form=alumno_clas, mat=mat, nom=nom, ape=ape,email=email)
 
+@app.route('/cinepolis', methods=['GET', 'POST'])
+def cinepolis():
+    total = ''
+    mensaje = ''
+    nombre = ''
+    compradores = ''
+    boletos_val = ''
+    cineco = 'no'
+
+    form = CinepolisForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        nombre = request.form.get('nombre')
+        compradores = request.form.get('compradores')
+        boletos_val = request.form.get('boletos')
+        cineco = request.form.get('cineco')
+    
+
+        boletos = form.boletos.data
+
+        if boletos > 7:
+            mensaje = 'No se pueden comprar más de 7 boletos por persona'
+        else:
+            precio = boletos * 12000
+
+            if boletos > 5:
+                precio = precio * 0.85
+            elif boletos >= 3:
+                precio = precio * 0.90
+
+            if cineco == 'si':
+                precio = precio * 0.90
+
+            total = precio
+
+    return render_template(
+        'cinepolis.html',total=total,mensaje=mensaje,nombre=nombre,compradores=compradores,boletos=boletos_val,cineco=cineco, form=form)
+
+
+@app.route('/pizza', methods=['GET', 'POST'])
+def pizza():
+    form = PizzaForm(request.form)
+    total = None
+
+    if request.method == 'POST' and form.validate():
+
+        # Precio tamaño
+        if form.tamano.data == 'chica':
+            precio_tam = 40
+        elif form.tamano.data == 'mediana':
+            precio_tam = 80
+        else:
+            precio_tam = 120
+
+        # Ingredientes
+        precio_ing = len(form.ingredientes.data) * 10
+
+        total = (precio_tam + precio_ing) * form.piezas.data
+
+    return render_template(
+        'pizza.html',
+        form=form,
+        total=total
+    )
 
 
 if __name__=='__main__':

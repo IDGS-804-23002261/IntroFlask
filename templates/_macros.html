@@ -1,11 +1,10 @@
-{% macro datos(name, placeholder='', type='text') %}
+{% macro campo(nombre, etiqueta, tipo='text', valor='') %}
 <div class="mb-3">
-    <label for="{{ name }}" class="form-label">{{ name }}</label>
-    <input type="{{ type }}" class="form-control" id="{{ name }}" name="{{ name }}" 
-        placeholder="{{ placeholder }}">
+    <label class="form-label">{{ etiqueta }}</label>
+    <input type="{{ tipo }}" class="form-control" name="{{ nombre }}" value="{{ valor }}">
 </div>
 {% endmacro %}
-
+ <!--
 {% macro camposNuevos(field) %}
 
 <td>{{field.label}}</td>
@@ -19,4 +18,16 @@
 </ul>
 {%endif%}
 
+{% endmacro %}
+-->
+
+{% macro camposNuevos(field) %}
+<div class="mb-3">
+    {{ field.label }}
+    {{ field(class="form-control") }}
+
+    {% for error in field.errors %}
+        <div style="color:red;">{{ error }}</div>
+    {% endfor %}
+</div>
 {% endmacro %}

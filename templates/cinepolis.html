@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+{% import "_macros.html" as macros %}
+
+<h2 class="text-center mb-4">Cinépolis</h2>
+
+<form method="POST" action="/cinepolis" novalidate>
+
+    <fieldset class="box">
+        <legend>Entradas</legend>
+
+        {{ macros.camposNuevos(form.nombre) }}
+        {{ macros.camposNuevos(form.compradores) }}
+        {{ macros.camposNuevos(form.boletos) }}
+
+
+        <label class="form-label">Tarjeta CINECO</label><br>
+        <input type="radio" name="cineco" value="si"> Sí
+        <input type="radio" name="cineco" value="no" checked> No
+    </fieldset>
+
+    <fieldset class="box">
+    <legend>Salidas</legend>
+
+    {% if mensaje %}
+        <div class="text-danger">{{ mensaje }}</div>
+    {% endif %}
+
+    <label class="form-label">Total a pagar</label><br>
+    <input type="text" class="form-control" value="{{ total }}" readonly>
+</fieldset>
+
+
+    <fieldset class="box">
+        <legend>Acciones</legend>
+        <button type="submit" class="btn btn-primary">Procesar</button>
+        <a href="/" class="btn btn-secondary">Salir</a>
+    </fieldset>
+
+</form>
+
+{% endblock %}
